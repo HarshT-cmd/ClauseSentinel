@@ -73,7 +73,8 @@ class GeminiService:
         }
 
         try:
-            with httpx.Client(timeout=10.0) as client:
+            # Quick 3.5s timeout so cloud latency or quota throttling never blocks the API
+            with httpx.Client(timeout=3.5) as client:
                 response = client.post(
                     url,
                     headers={"Content-Type": "application/json"},
