@@ -61,6 +61,10 @@ TRAINING_DATA = [
     ("Hamare gaon ki sadak puri tarah toot chuki hai", "Roads"),
     ("Sadak par bahut bade gaddhe hai gaadi chalana mushkil hai", "Roads"),
     ("Road var khadde ahet dharashiv road purna kharab", "Roads"),
+    ("There are potholes infront of my house in satara", "Roads"),
+    ("Huge potholes on the street outside my home", "Roads"),
+    ("Potholes and broken asphalt on society road", "Roads"),
+    ("Road repair needed due to deep potholes and water logging", "Roads"),
 
     # --- Electricity ---
     ("Gavath light geli ahe transformer blast zala ahe", "Electricity"),

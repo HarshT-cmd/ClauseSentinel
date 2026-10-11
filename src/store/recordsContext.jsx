@@ -21,6 +21,89 @@ export function RecordsProvider({ children }) {
   });
 
   const [toasts, setToasts] = useState([]);
+  const [backendOnline, setBackendOnline] = useState(false);
+
+  // Probe backend health to seamlessly enable Gemini AI hybrid reasoning
+  useEffect(() => {
+    let isMounted = true;
+    const checkBackend = async () => {
+      try {
+        const res = await fetch('http://127.0.0.1:8000/api/health', { method: 'GET' });
+        if (res.ok && isMounted) {
+          setBackendOnline(true);
+        } else if (isMounted) {
+          setBackendOnline(false);
+        }
+      } catch (err) {
+        if (isMounted) setBackendOnline(false);
+      }
+    };
+    checkBackend();
+    const interval = setInterval(checkBackend, 10000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
+
+  // Hybrid AI prediction: Gemini API backend preferred, local dialect engine fallback
+  const predictGrievance = async (text, forceLocal = false) => {
+    if (!text || !text.trim()) return null;
+
+    if (!forceLocal && backendOnline) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
+        const res = await fetch('http://127.0.0.1:8000/api/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (res.ok) {
+          const data = await res.json();
+          const isUncertain = data.predicted_region === 'Uncertain';
+          return {
+            dialectZone: isUncertain ? 'Unmapped' : data.predicted_region,
+            dialectZoneId: isUncertain ? 'unmapped' : data.predicted_region.toLowerCase().replace(/[^a-z0-9]/g, '_'),
+            region: data.predicted_region,
+            office: isUncertain ? 'Unmapped / Review Needed' : `${data.predicted_region} Regional Desk`,
+            issueCategory: data.predicted_category,
+            confidence: data.confidence,
+            confidencePercent: Math.round(data.confidence * 100),
+            languageStyle: data.language,
+            matchedClues: (data.regional_clues || []).map(c => ({
+              term: c,
+              matchedToken: c,
+              type: 'evidence',
+              zone: data.predicted_region,
+              weight: 2.0
+            })),
+            runnerUp: null,
+            status: data.routing_status === 'auto_routed' ? 'Verified / Routed' : 'Needs Review',
+            tokensCount: text.trim().split(/\s+/).length,
+            reasoning: data.regional_clues && data.regional_clues.length > 0
+              ? `Evidence-based routing via ${data.regional_clues.join(', ')}`
+              : (isUncertain ? 'No verified dialect/administrative cue found; queued for human review.' : 'Analyzed via Clause Sentinel Gemini AI'),
+            engine: 'gemini_backend',
+            backendId: data.complaint_id,
+            normalizedText: text
+          };
+        }
+      } catch (e) {
+        console.warn('Backend prediction timed out or failed, falling back to local engine:', e);
+      }
+    }
+
+    // High-performance local dialect & district engine
+    const localRes = classifyText(text);
+    return {
+      ...localRes,
+      engine: 'local'
+    };
+  };
 
   // Save to localStorage on change
   useEffect(() => {
@@ -207,7 +290,9 @@ export function RecordsProvider({ children }) {
         clearAllRecords,
         toasts,
         addToast,
-        removeToast
+        removeToast,
+        backendOnline,
+        predictGrievance
       }}
     >
       {children}

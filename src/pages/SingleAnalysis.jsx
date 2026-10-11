@@ -49,6 +49,11 @@ const SAMPLE_CHIPS = [
     text: 'Formal grievance complaint regarding municipal corporation road infrastructure department urgent attention required'
   },
   {
+    label: 'English with District Cue',
+    category: 'Western Maharashtra',
+    text: 'there are potholes infront of my house in satara'
+  },
+  {
     label: 'Ambiguous / Needs Review',
     category: 'Review Needed',
     text: 'please help urgent problem'
@@ -60,8 +65,9 @@ export default function SingleAnalysis() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
+  const [useLocalOnly, setUseLocalOnly] = useState(false);
 
-  const { addRecord } = useRecords();
+  const { addRecord, predictGrievance, backendOnline } = useRecords();
 
   const handleAnalyze = async () => {
     if (!inputText.trim()) return;
@@ -69,6 +75,7 @@ export default function SingleAnalysis() {
     setIsSaved(false);
 
     try {
+<<<<<<< HEAD
       const response = await fetch('http://127.0.0.1:8000/api/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -95,15 +102,28 @@ export default function SingleAnalysis() {
 
     setTimeout(() => {
       const res = classifyText(inputText);
+=======
+      const res = await predictGrievance(inputText, useLocalOnly);
+>>>>>>> 1b75489 (feat: connect frontend to Gemini AI backend, enhance dialect recognition, and fix bulk CSV text column auto-detection)
       setResult(res);
+    } catch (err) {
+      console.error('Prediction error:', err);
+      const fallback = classifyText(inputText);
+      setResult({ ...fallback, engine: 'local' });
+    } finally {
       setIsAnalyzing(false);
+<<<<<<< HEAD
     }, 400);
+=======
+    }
+>>>>>>> 1b75489 (feat: connect frontend to Gemini AI backend, enhance dialect recognition, and fix bulk CSV text column auto-detection)
   };
 
-  const handleSelectSample = (sampleText) => {
+  const handleSelectSample = async (sampleText) => {
     setInputText(sampleText);
     setIsSaved(false);
     setIsAnalyzing(true);
+<<<<<<< HEAD
 
     fetch('http://127.0.0.1:8000/api/predict', {
       method: 'POST',
@@ -133,6 +153,18 @@ export default function SingleAnalysis() {
       .finally(() => {
         setIsAnalyzing(false);
       });
+=======
+    try {
+      const res = await predictGrievance(sampleText, useLocalOnly);
+      setResult(res);
+    } catch (err) {
+      console.error('Prediction error:', err);
+      const fallback = classifyText(sampleText);
+      setResult({ ...fallback, engine: 'local' });
+    } finally {
+      setIsAnalyzing(false);
+    }
+>>>>>>> 1b75489 (feat: connect frontend to Gemini AI backend, enhance dialect recognition, and fix bulk CSV text column auto-detection)
   };
 
   const handleClear = () => {
@@ -235,6 +267,35 @@ export default function SingleAnalysis() {
               className="w-full px-3.5 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-slate-800 text-sm leading-relaxed placeholder:text-slate-400 bg-slate-50/50 resize-y"
             />
 
+            {/* Engine Selector */}
+            <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span className="text-slate-500 font-medium">Inference Engine:</span>
+              <div className="inline-flex rounded-lg border border-slate-200 p-0.5 bg-slate-50">
+                <button
+                  type="button"
+                  onClick={() => setUseLocalOnly(false)}
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all ${
+                    !useLocalOnly
+                      ? 'bg-teal-500 text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  ✨ Gemini AI {backendOnline ? '(Online)' : '(Auto-fallback)'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUseLocalOnly(true)}
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all ${
+                    useLocalOnly
+                      ? 'bg-slate-700 text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  ⚡ Local Dialect Rules
+                </button>
+              </div>
+            </div>
+
             {/* Quick Action Buttons */}
             <div className="mt-3 flex items-center justify-between gap-3">
               <span className="text-xs text-slate-400">
@@ -301,7 +362,19 @@ export default function SingleAnalysis() {
             <div className="bento-card p-6 space-y-5 animate-in fade-in duration-200">
               {/* Header Status & Save */}
               <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-                <StatusBadge status={result.status} />
+                <div className="flex items-center gap-2">
+                  <StatusBadge status={result.status} />
+                  {result.engine === 'gemini_backend' ? (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                      <Sparkles className="w-3 h-3 text-indigo-500" />
+                      Gemini AI Engine
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                      ⚡ Local Engine
+                    </span>
+                  )}
+                </div>
                 <button
                   onClick={handleSaveToRecords}
                   disabled={isSaved}

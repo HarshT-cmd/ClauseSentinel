@@ -31,6 +31,7 @@ export default function BulkProcessing() {
   const [file, setFile] = useState(null);
   const [columns, setColumns] = useState([]);
   const [selectedTextCol, setSelectedTextCol] = useState('');
+  const [previewRows, setPreviewRows] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [processedRows, setProcessedRows] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -54,16 +55,74 @@ export default function BulkProcessing() {
     URL.revokeObjectURL(url);
   };
 
-  // Auto-detect text column name
-  const detectTextColumn = (headers) => {
-    const candidates = ['complaint', 'text', 'feedback', 'message', 'submission', 'grievance', 'description', 'issue'];
+  // Robust text column auto-detection that analyzes actual sample values and penalizes ID columns
+  const detectTextColumn = (headers, previewData = []) => {
+    if (!headers || headers.length === 0) return '';
+
+    const idRegex = /(_id$|^id$|_no$|^no$|sno|sr_no|ticket|code|date|time|timestamp|status|division|department)/i;
+
+    const textKeywords = [
+      'complaint_text', 'grievance_text', 'feedback_text', 'issue_text', 'message_text',
+      'complaint', 'grievance', 'feedback', 'text', 'message', 'description', 'issue',
+      'submission', 'details', 'comment', 'remarks', 'body', 'content', 'query', 'takrar'
+    ];
+
+    let bestCol = '';
+    let bestScore = -999;
+
     for (const h of headers) {
       const lower = h.toLowerCase().trim();
-      if (candidates.some(c => lower.includes(c))) {
-        return h;
+      let score = 0;
+
+      // Penalize identifier / metadata columns heavily
+      if (idRegex.test(lower)) {
+        score -= 100;
+      }
+
+      // Check text keyword matches
+      for (let i = 0; i < textKeywords.length; i++) {
+        const kw = textKeywords[i];
+        if (lower === kw) {
+          score += 50 - i;
+          break;
+        } else if (lower.includes(kw) && !lower.endsWith('_id') && !lower.endsWith('id')) {
+          score += 30 - i;
+          break;
+        }
+      }
+
+      // Check actual sample cell lengths from previewData
+      if (previewData && previewData.length > 0) {
+        let totalLen = 0;
+        let spaces = 0;
+        let valid = 0;
+
+        for (const row of previewData) {
+          const val = (row[h] || '').toString().trim();
+          if (val) {
+            valid++;
+            totalLen += val.length;
+            if (val.includes(' ')) spaces++;
+          }
+        }
+
+        if (valid > 0) {
+          const avgLen = totalLen / valid;
+          if (avgLen > 15 && spaces > 0) {
+            score += 40 + Math.min(30, avgLen);
+          } else if (avgLen < 10 && spaces === 0) {
+            score -= 40; // Looks like an ID code
+          }
+        }
+      }
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestCol = h;
       }
     }
-    return headers[0] || '';
+
+    return bestCol || headers[0] || '';
   };
 
   const handleFileSelect = (selectedFile) => {
@@ -83,8 +142,10 @@ export default function BulkProcessing() {
           return;
         }
         const fields = results.meta.fields;
+        const pRows = results.data || [];
         setColumns(fields);
-        const autoDetected = detectTextColumn(fields);
+        setPreviewRows(pRows);
+        const autoDetected = detectTextColumn(fields, pRows);
         setSelectedTextCol(autoDetected);
       },
       error: (err) => {
@@ -110,13 +171,18 @@ export default function BulkProcessing() {
           return;
         }
 
+        // Find potential ID column for display
+        const idCol = columns.find(c => /(_id$|^id$|ticket|sno|sr_no)/i.test(c.toLowerCase()));
+
         const enriched = rows.map((row, index) => {
-          const rawText = (row[selectedTextCol] || '').toString();
+          const rawText = (row[selectedTextCol] ?? '').toString().trim();
           const classification = classifyText(rawText);
+          const rowId = idCol && row[idCol] ? row[idCol] : `#${index + 1}`;
 
           return {
             ...row,
             __id: `bulk_${index + 1}`,
+            __displayId: rowId,
             __rawText: rawText,
             Detected_Dialect: classification.dialectZone,
             Predicted_Region: classification.region,
@@ -270,46 +336,71 @@ export default function BulkProcessing() {
 
         {/* Text column mapping & Process Trigger */}
         {columns.length > 0 && (
-          <div className="mt-5 pt-5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <label htmlFor="col-select" className="text-xs font-semibold text-slate-700 shrink-0 flex items-center gap-1.5">
-                <Sliders className="w-3.5 h-3.5 text-teal-600" />
-                Text Column:
-              </label>
-              <select
-                id="col-select"
-                value={selectedTextCol}
-                onChange={(e) => setSelectedTextCol(e.target.value)}
-                className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+          <div className="mt-5 pt-5 border-t border-slate-100 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <label htmlFor="col-select" className="text-xs font-semibold text-slate-700 shrink-0 flex items-center gap-1.5">
+                  <Sliders className="w-3.5 h-3.5 text-teal-600" />
+                  Text Column:
+                </label>
+                <select
+                  id="col-select"
+                  value={selectedTextCol}
+                  onChange={(e) => setSelectedTextCol(e.target.value)}
+                  className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 shadow-xs"
+                >
+                  {columns.map(col => (
+                    <option key={col} value={col}>
+                      {col}
+                    </option>
+                  ))}
+                </select>
+                <span className="text-[11px] text-teal-700 font-medium bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200">
+                  Auto-selected
+                </span>
+              </div>
+
+              <button
+                onClick={handleProcessCSV}
+                disabled={isProcessing || !selectedTextCol}
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white text-xs font-semibold shadow-xs disabled:opacity-50 transition-all shrink-0"
               >
-                {columns.map(col => (
-                  <option key={col} value={col}>
-                    {col}
-                  </option>
-                ))}
-              </select>
-              <span className="text-[11px] text-slate-400">
-                (Auto-detected text field)
-              </span>
+                {isProcessing ? (
+                  <>
+                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Processing All Rows...
+                  </>
+                ) : (
+                  <>
+                    <FileCheck className="w-4 h-4" />
+                    Run Batch Classification
+                  </>
+                )}
+              </button>
             </div>
 
-            <button
-              onClick={handleProcessCSV}
-              disabled={isProcessing || !selectedTextCol}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white text-xs font-semibold shadow-xs disabled:opacity-50 transition-all shrink-0"
-            >
-              {isProcessing ? (
-                <>
-                  <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Processing All Rows...
-                </>
-              ) : (
-                <>
-                  <FileCheck className="w-4 h-4" />
-                  Run Dialect Classification
-                </>
-              )}
-            </button>
+            {/* Column Preview & Warning */}
+            {selectedTextCol && previewRows.length > 0 && (
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
+                <div className="flex items-center gap-2 text-slate-700">
+                  <span className="font-semibold text-teal-800">Preview 1st Row Value:</span>
+                  <span className="italic text-slate-800 truncate font-mono max-w-xl">
+                    "{previewRows[0]?.[selectedTextCol] || 'Empty'}"
+                  </span>
+                </div>
+                {previewRows[0]?.[selectedTextCol] &&
+                 previewRows[0][selectedTextCol].toString().length < 10 &&
+                 !previewRows[0][selectedTextCol].toString().includes(' ') && (
+                  <div className="flex items-center gap-1.5 text-amber-700 font-medium">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                    <span>
+                      Notice: "{selectedTextCol}" appears to contain short ID codes (e.g., "{previewRows[0][selectedTextCol]}"). 
+                      Make sure to select the column containing the full citizen grievance text above.
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -389,7 +480,7 @@ export default function BulkProcessing() {
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 uppercase font-semibold text-[11px] tracking-wider">
                   <tr>
-                    <th className="py-3 px-4">#</th>
+                    <th className="py-3 px-4"># / ID</th>
                     <th className="py-3 px-4 min-w-[280px]">Citizen Grievance</th>
                     <th className="py-3 px-4">Detected Dialect</th>
                     <th className="py-3 px-4">Predicted Region</th>
@@ -401,7 +492,14 @@ export default function BulkProcessing() {
                 <tbody className="divide-y divide-slate-100 text-slate-700">
                   {filteredRows.slice(0, 50).map((row, idx) => (
                     <tr key={row.__id || idx} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="py-3 px-4 font-mono text-slate-400">{idx + 1}</td>
+                      <td className="py-3 px-4 font-mono text-slate-500 whitespace-nowrap">
+                        <span className="text-slate-400">{idx + 1}</span>
+                        {row.__displayId && !row.__displayId.startsWith('#') && (
+                          <span className="ml-2 px-1.5 py-0.5 rounded bg-slate-100 text-[10px] text-slate-700 font-semibold border border-slate-200">
+                            {row.__displayId}
+                          </span>
+                        )}
+                      </td>
                       <td className="py-3 px-4 text-slate-800 font-medium max-w-sm truncate" title={row.__rawText}>
                         {row.__rawText}
                       </td>

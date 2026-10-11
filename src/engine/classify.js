@@ -48,6 +48,10 @@ export function isFuzzyMatch(token, target) {
   // Do not fuzzy match very short tokens (< 4 letters) to avoid false positives
   if (len < 4) return false;
 
+  // Prevent false positive fuzzy matches on common English words (e.g. "there" ~ "thare")
+  const commonEng = new Set(['there', 'where', 'here', 'share', 'their', 'house', 'front', 'water', 'clean', 'please', 'about']);
+  if (commonEng.has(t1) || commonEng.has(t2)) return false;
+
   const dist = levenshteinDistance(t1, t2);
   if (len <= 5 && dist <= 1) return true;
   if (len > 5 && dist <= 2) return true;
@@ -116,6 +120,15 @@ export function detectLanguageStyle(rawText, scriptInfo, topZoneId) {
     if (topZoneId === 'standard_english') {
       return 'Standard English';
     }
+    // Check if tokens are predominantly standard English words
+    const lower = rawText.toLowerCase();
+    const commonEnglish = ['the', 'is', 'are', 'there', 'infront', 'in', 'front', 'of', 'my', 'house', 'road', 'pothole', 'potholes', 'street', 'water', 'supply', 'please', 'help', 'urgent', 'problem', 'regarding', 'department', 'officer', 'complaint', 'broken', 'damaged', 'electricity', 'drainage', 'light', 'clean', 'bridge', 'we', 'have', 'no', 'and', 'to', 'for', 'at'];
+    const tokens = lower.split(/\s+/).map(t => t.replace(/[^a-z]/g, '')).filter(Boolean);
+    const engMatches = tokens.filter(t => commonEnglish.includes(t)).length;
+    if (tokens.length > 0 && engMatches / tokens.length >= 0.35) {
+      return 'English (Regional Administrative Desk)';
+    }
+
     if (topZoneId === 'mumbai_central') {
       return 'Mumbai Hinglish';
     }
@@ -271,6 +284,11 @@ export function classifyText(text) {
     // Boost slightly if strong phrase clues
     if (top.clues.some(c => c.type === 'phrase')) {
       rawConfidence = Math.min(1.0, rawConfidence + 0.1);
+    }
+    // Boost if explicit administrative district or division clue
+    const districtTerms = ['satara', 'pune', 'kolhapur', 'sangli', 'solapur', 'nagpur', 'amravati', 'latur', 'nanded', 'jalgaon', 'dhule', 'ratnagiri', 'sindhudurg', 'bmc', 'mumbai', 'paschim maharashtra', 'vidarbha', 'marathwada', 'konkan', 'khandesh'];
+    if (top.clues.some(c => districtTerms.includes(c.term) && c.type === 'exact')) {
+      rawConfidence = Math.max(rawConfidence, 0.94);
     }
   }
   const confidence = Math.min(0.98, Math.max(0, Math.round(rawConfidence * 100) / 100));
