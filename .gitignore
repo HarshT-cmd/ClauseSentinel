@@ -1,12 +1,10 @@
-# Byte-compiled / optimized / DLL files
+# Python bytecode
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
 
-# Distribution / packaging
+# Python packaging and build outputs
 .Python
 build/
 develop-eggs/
@@ -24,11 +22,17 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual Environments
+# Virtual environments
 .venv/
 venv/
 ENV/
 env/
+
+# Environment variables and secrets
+.env
+**/.env
+!.env.example
+!**/.env.example
 
 # SQLite databases
 *.db
@@ -36,10 +40,7 @@ env/
 clause_sentinel.db
 test_clause_sentinel.db
 
-# Environment variables
-.env
-
-# Pytest / Coverage
+# Pytest and coverage
 .pytest_cache/
 .coverage
 htmlcov/
@@ -48,3 +49,15 @@ htmlcov/
 .vscode/
 .idea/
 *.swp
+
+# Frontend dependencies
+node_modules/
+
+# Frontend build outputs
+dist/
+
+# macOS
+.DS_Store
+
+# Local configuration files
+*.local
