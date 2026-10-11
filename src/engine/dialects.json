@@ -1,0 +1,270 @@
+{
+  "dialectZones": [
+    {
+      "id": "western_maharashtra",
+      "label": "Western Maharashtra",
+      "region": "Western Maharashtra (Pune/Satara/Kolhapur/Sangli)",
+      "language": "Marathi (Western)",
+      "office": "West Maharashtra Division",
+      "keywords": [
+        { "term": "amchya", "variants": ["amchya", "aamchya", "आमच्या"], "weight": 1.4 },
+        { "term": "nahi yet", "variants": ["nahi yet", "nai yet", "येत नाही", "yet nahi"], "weight": 1.6 },
+        { "term": "pani nahi yet", "variants": ["pani nahi yet", "paani nahi yet", "पाणी येत नाही"], "weight": 2.2 },
+        { "term": "kay zala", "variants": ["kay zala", "kaay zala", "काय झालं", "काय झाले"], "weight": 1.5 },
+        { "term": "majha", "variants": ["majha", "maaza", "माझा", "माझी"], "weight": 1.2 },
+        { "term": "aho", "variants": ["aho", "अहो"], "weight": 1.3 },
+        { "term": "vaato", "variants": ["vaato", "vaatate", "वाटतं", "वाटते"], "weight": 1.4 },
+        { "term": "gavat", "variants": ["gavat", "gaavat", "गावात"], "weight": 1.3 },
+        { "term": "lavkar", "variants": ["lavkar", "लवकर"], "weight": 1.2 },
+        { "term": "shikshan", "variants": ["shikshan", "शिक्षण"], "weight": 1.0 },
+        { "term": "divas zale", "variants": ["divas zale", "diwas zale", "दिवस झाले"], "weight": 1.6 },
+        { "term": "kashta", "variants": ["kashta", "कष्ट"], "weight": 1.2 },
+        { "term": "krupaya", "variants": ["krupaya", "कृपया"], "weight": 1.0 },
+        { "term": "adhikari", "variants": ["adhikari", "अधिकारी"], "weight": 1.1 },
+        { "term": "vij nahi", "variants": ["vij nahi", "vij naahi", "वीज नाही", "लाइट नाही", "light nahi"], "weight": 2.2 },
+        { "term": "nahi", "variants": ["nahi", "नाही"], "weight": 1.2 },
+        { "term": "ahe", "variants": ["ahe", "aahe", "आहे"], "weight": 1.1 }
+      ]
+    },
+    {
+      "id": "marathwada",
+      "label": "Marathwada",
+      "region": "Marathwada (Beed/Latur/Nanded/Parbhani)",
+      "language": "Marathi (Marathwada)",
+      "office": "Marathwada Regional Desk",
+      "keywords": [
+        { "term": "nai aavtay", "variants": ["nai aavtay", "nahi aavtad", "नावडतंय", "नावडत", "nai aavdat"], "weight": 2.2 },
+        { "term": "kaay raav", "variants": ["kaay raav", "kay rav", "काय राव", "kay rao"], "weight": 2.2 },
+        { "term": "mhanje", "variants": ["mhanje", "म्हणजे"], "weight": 1.3 },
+        { "term": "aamchya gavat", "variants": ["aamchya gavat", "amchya gavaat", "आमच्या गावात"], "weight": 1.3 },
+        { "term": "tya", "variants": ["tya", "त्या"], "weight": 1.0 },
+        { "term": "dushkal", "variants": ["dushkal", "duskhal", "दुष्काळ"], "weight": 1.8 },
+        { "term": "bagha ki", "variants": ["bagha ki", "बघा की"], "weight": 1.8 },
+        { "term": "kiti divas", "variants": ["kiti divas", "किती दिवस"], "weight": 1.4 },
+        { "term": "raav", "variants": ["raav", "राव"], "weight": 1.5 },
+        { "term": "pausi", "variants": ["pausi", "paus", "पाऊस"], "weight": 1.2 },
+        { "term": "chalu kara", "variants": ["chalu kara", "चालू करा"], "weight": 1.2 },
+        { "term": "davakhana", "variants": ["davakhana", "दवाखाना"], "weight": 1.2 },
+        { "term": "latur", "variants": ["latur", "लातूर"], "weight": 1.7 },
+        { "term": "nanded", "variants": ["nanded", "नांदेड"], "weight": 1.7 }
+      ]
+    },
+    {
+      "id": "vidarbha",
+      "label": "Vidarbha",
+      "region": "Vidarbha (Nagpur/Amravati/Akola)",
+      "language": "Marathi (Varhadi/Vidarbha)",
+      "office": "Vidarbha Regional Desk",
+      "keywords": [
+        { "term": "bhau", "variants": ["bhau", "भाऊ", "भावा"], "weight": 1.6 },
+        { "term": "kaay re", "variants": ["kaay re", "kay re", "काय रे"], "weight": 1.5 },
+        { "term": "vhay", "variants": ["vhay", "व्हय", "vhay re"], "weight": 2.3 },
+        { "term": "nahi na", "variants": ["nahi na", "nai na", "नाही ना"], "weight": 1.4 },
+        { "term": "bhetla nai", "variants": ["bhetla nai", "bhetla nahi", "भेटला नाही"], "weight": 2.0 },
+        { "term": "potte", "variants": ["potte", "pottan", "पोटे", "पोरे"], "weight": 2.1 },
+        { "term": "ahe ka", "variants": ["ahe ka", "aahe ka", "आहे का"], "weight": 1.2 },
+        { "term": "loka", "variants": ["loka", "lok", "लोकं"], "weight": 1.1 },
+        { "term": "jorachi", "variants": ["jorachi", "जोराची"], "weight": 1.3 },
+        { "term": "sheti", "variants": ["sheti", "शेती"], "weight": 1.2 },
+        { "term": "nagpur", "variants": ["nagpur", "नागपूर"], "weight": 1.8 },
+        { "term": "amravati", "variants": ["amravati", "अमरावती"], "weight": 1.8 },
+        { "term": "kharab", "variants": ["kharab", "खराब"], "weight": 1.0 }
+      ]
+    },
+    {
+      "id": "khandesh",
+      "label": "Khandesh",
+      "region": "Khandesh (Jalgaon/Dhule)",
+      "language": "Ahirani / Khandeshi",
+      "office": "Khandesh Desk",
+      "keywords": [
+        { "term": "mhaare", "variants": ["mhaare", "mhare", "म्‍हारे"], "weight": 2.2 },
+        { "term": "mana", "variants": ["mana", "मना"], "weight": 1.6 },
+        { "term": "tumhi kai", "variants": ["tumhi kai", "तुम्ही काय"], "weight": 1.7 },
+        { "term": "gao ma", "variants": ["gao ma", "gavama", "गाव मा"], "weight": 2.2 },
+        { "term": "shana", "variants": ["shana", "शाणा"], "weight": 1.4 },
+        { "term": "dongar", "variants": ["dongar", "डोंगर"], "weight": 1.3 },
+        { "term": "kasa hoy", "variants": ["kasa hoy", "कसा होय"], "weight": 1.8 },
+        { "term": "vani", "variants": ["vani", "वाणी"], "weight": 1.4 },
+        { "term": "pothi", "variants": ["pothi", "पोथी"], "weight": 1.3 },
+        { "term": "jalgaon", "variants": ["jalgaon", "जळगाव"], "weight": 1.8 },
+        { "term": "dhule", "variants": ["dhule", "धुळे"], "weight": 1.8 }
+      ]
+    },
+    {
+      "id": "konkan",
+      "label": "Konkan",
+      "region": "Konkan (Sindhudurg/Ratnagiri/Raigad)",
+      "language": "Malvani / Konkani Marathi",
+      "office": "Konkan Regional Hub",
+      "keywords": [
+        { "term": "pani nai aavtai", "variants": ["pani nai aavtai", "paani nai aavtai", "पाणी नई आवतै"], "weight": 2.5 },
+        { "term": "aamhi", "variants": ["aamhi", "amhi", "आम्ही"], "weight": 1.3 },
+        { "term": "tumhala", "variants": ["tumhala", "तुम्हाला"], "weight": 1.2 },
+        { "term": "ghe", "variants": ["ghe", "घे", "घेवूक"], "weight": 1.5 },
+        { "term": "kasa", "variants": ["kasa", "कसा"], "weight": 1.1 },
+        { "term": "mhanun", "variants": ["mhanun", "म्हणून"], "weight": 1.3 },
+        { "term": "tras", "variants": ["tras", "traas", "त्रास"], "weight": 1.3 },
+        { "term": "nustach", "variants": ["nustach", "नुसताच"], "weight": 1.9 },
+        { "term": "khabar na", "variants": ["khabar na", "खबर ना"], "weight": 1.9 },
+        { "term": "samudra", "variants": ["samudra", "समुद्र"], "weight": 1.4 },
+        { "term": "kaju", "variants": ["kaju", "काजू"], "weight": 1.3 },
+        { "term": "bandar", "variants": ["bandar", "बंदर"], "weight": 1.3 },
+        { "term": "ratnagiri", "variants": ["ratnagiri", "रत्नागिरी"], "weight": 1.8 }
+      ]
+    },
+    {
+      "id": "mumbai_central",
+      "label": "Mumbai / Central Municipal",
+      "region": "Mumbai Metropolitan (BMC / Suburbs)",
+      "language": "Mumbai Hinglish / Urban",
+      "office": "Central Municipal Hub",
+      "keywords": [
+        { "term": "bmc", "variants": ["bmc", "b.m.c", "बीएमसी"], "weight": 2.3 },
+        { "term": "ward", "variants": ["ward", "ward officer", "वॉर्ड"], "weight": 1.8 },
+        { "term": "society", "variants": ["society", "chawl", "सोसायटी"], "weight": 1.7 },
+        { "term": "local", "variants": ["local train", "local", "लोकल"], "weight": 1.7 },
+        { "term": "khadda", "variants": ["khadda", "khadde", "खड्डा", "खड्डे"], "weight": 1.4 },
+        { "term": "bindaas", "variants": ["bindaas", "bindas", "बिंदास"], "weight": 1.8 },
+        { "term": "line band", "variants": ["line band", "line bandh", "लाइन बंद"], "weight": 1.7 },
+        { "term": "meter", "variants": ["meter", "auto meter", "मीटर"], "weight": 1.4 },
+        { "term": "builder", "variants": ["builder", "redevelopment"], "weight": 1.6 },
+        { "term": "gutter", "variants": ["gutter", "nalla", "गटर"], "weight": 1.4 },
+        { "term": "pothole", "variants": ["pothole", "potholes"], "weight": 1.3 },
+        { "term": "dadar", "variants": ["dadar", "andheri", "thane", "kurla"], "weight": 1.7 }
+      ]
+    },
+    {
+      "id": "bhojpuri_east_up",
+      "label": "Bhojpuri Belt (Bihar / East UP)",
+      "region": "Bhojpuri Belt (Bihar / East UP)",
+      "language": "Bhojpuri / Rural Hindi",
+      "office": "North India Rural Desk (East)",
+      "keywords": [
+        { "term": "humra", "variants": ["humra", "humre", "हमरा"], "weight": 2.3 },
+        { "term": "hamar", "variants": ["hamar", "हमार"], "weight": 2.2 },
+        { "term": "ba", "variants": ["ba", "बा"], "weight": 1.4 },
+        { "term": "bate", "variants": ["bate", "बाटे"], "weight": 2.0 },
+        { "term": "kaahe", "variants": ["kaahe", "kahe", "काहे"], "weight": 2.0 },
+        { "term": "raua", "variants": ["raua", "रउवा"], "weight": 2.3 },
+        { "term": "bijli gol", "variants": ["bijli gol", "light gol", "बिजली गोल"], "weight": 2.4 },
+        { "term": "naikhe", "variants": ["naikhe", "नाइखे", "नईखे"], "weight": 2.3 },
+        { "term": "kekra", "variants": ["kekra", "kekro", "केकरा"], "weight": 2.0 },
+        { "term": "koi nahi sunta", "variants": ["koi nahi sunta", "koi nai sunat", "कोई नहीं सुनता"], "weight": 1.7 },
+        { "term": "lekhpal", "variants": ["lekhpal", "लेखपाल"], "weight": 1.6 },
+        { "term": "gaon me", "variants": ["gaon me", "gawn me", "गाँव में"], "weight": 1.3 },
+        { "term": "taani", "variants": ["taani", "तानी"], "weight": 1.7 }
+      ]
+    },
+    {
+      "id": "awadhi_central_up",
+      "label": "Awadhi / Central UP",
+      "region": "Central UP (Awadh / Lucknow / Ayodhya)",
+      "language": "Awadhi / Hindi",
+      "office": "North India Rural Desk (Awadh)",
+      "keywords": [
+        { "term": "hamaar", "variants": ["hamaar", "हमर"], "weight": 1.6 },
+        { "term": "kahaan", "variants": ["kahaan", "कहाँ"], "weight": 1.3 },
+        { "term": "naahi", "variants": ["naahi", "नाही", "नाहीं"], "weight": 2.1 },
+        { "term": "kai", "variants": ["kai", "केई"], "weight": 1.1 },
+        { "term": "tohar", "variants": ["tohar", "तोहार"], "weight": 2.1 },
+        { "term": "ghar kay", "variants": ["ghar kay", "घर के"], "weight": 1.5 },
+        { "term": "karat hai", "variants": ["karat hai", "करत है", "करत अहइ"], "weight": 1.9 },
+        { "term": "baani", "variants": ["baani", "बानी"], "weight": 1.7 },
+        { "term": "kahen", "variants": ["kahen", "कहेन"], "weight": 1.8 },
+        { "term": "daiya", "variants": ["daiya", "दैया"], "weight": 1.9 },
+        { "term": "pradhan ji", "variants": ["pradhan ji", "प्रधान जी"], "weight": 1.5 },
+        { "term": "ayodhya", "variants": ["ayodhya", "lucknow", "अयोध्या"], "weight": 1.7 }
+      ]
+    },
+    {
+      "id": "haryanvi_west_up",
+      "label": "Haryanvi / Western UP / Delhi NCR",
+      "region": "Haryana & Western UP (NCR)",
+      "language": "Haryanvi / Khari Boli",
+      "office": "North India Rural Desk (West)",
+      "keywords": [
+        { "term": "mhare", "variants": ["mhare", "म्हारे", "म्हारा"], "weight": 2.3 },
+        { "term": "thare", "variants": ["thare", "थारे", "थारा"], "weight": 2.3 },
+        { "term": "ke", "variants": ["ke", "के"], "weight": 1.1 },
+        { "term": "kuch na", "variants": ["kuch na", "कुछ ना"], "weight": 1.4 },
+        { "term": "bijli na aayi", "variants": ["bijli na aayi", "bijli koni aayi", "बिजली ना आई"], "weight": 2.4 },
+        { "term": "manne", "variants": ["manne", "मन्ने"], "weight": 2.3 },
+        { "term": "tanne", "variants": ["tanne", "तन्ने"], "weight": 2.3 },
+        { "term": "ib", "variants": ["ib", "इब"], "weight": 2.1 },
+        { "term": "kite", "variants": ["kite", "कितै"], "weight": 2.1 },
+        { "term": "lafda", "variants": ["lafda", "लफड़ा"], "weight": 1.6 },
+        { "term": "gaam", "variants": ["gaam", "गाम"], "weight": 2.0 },
+        { "term": "koni", "variants": ["koni", "कोनी"], "weight": 2.2 },
+        { "term": "chhora", "variants": ["chhora", "छोरा"], "weight": 1.8 }
+      ]
+    },
+    {
+      "id": "standard_english",
+      "label": "Standard English",
+      "region": "National Jurisdiction (English)",
+      "language": "English",
+      "office": "National Helpdesk (English)",
+      "keywords": [
+        { "term": "please look into this", "variants": ["please look into this", "kindly look into this"], "weight": 2.2 },
+        { "term": "urgent attention required", "variants": ["urgent attention required", "immediate attention needed"], "weight": 2.2 },
+        { "term": "municipal corporation", "variants": ["municipal corporation", "administrative department"], "weight": 2.0 },
+        { "term": "grievance complaint", "variants": ["grievance complaint", "formal grievance", "grievance petition"], "weight": 2.1 },
+        { "term": "official inquiry", "variants": ["official inquiry", "public inquiry"], "weight": 1.8 },
+        { "term": "kindly resolve", "variants": ["kindly resolve", "urgently resolve"], "weight": 1.8 },
+        { "term": "district collector", "variants": ["district collector", "collector office"], "weight": 1.9 },
+        { "term": "regarding the issue", "variants": ["regarding the issue", "concerning the matter"], "weight": 1.7 },
+        { "term": "infrastructure department", "variants": ["infrastructure department", "public works department"], "weight": 1.9 },
+        { "term": "residence", "variants": ["residence", "locality citizens", "taxpayers"], "weight": 1.5 }
+      ]
+    }
+  ],
+  "issueCategories": [
+    {
+      "id": "Water",
+      "label": "Water",
+      "keywords": [
+        "pani", "paani", "panni", "paanee", "पाणी", "पानी", "nal", "नल", "tanker", "टँकर", "टैंकर",
+        "borewell", "peyjal", "पेयजल", "jal", "जल", "tap", "pipeline", "water supply", "dushkal", "दुष्काळ"
+      ]
+    },
+    {
+      "id": "Roads & Infrastructure",
+      "label": "Roads & Infrastructure",
+      "keywords": [
+        "sadak", "सड़क", "rasta", "रस्ता", "road", "roads", "khadda", "khadde", "खड्डा", "खड्डे",
+        "pool", "bridge", "पूल", "highway", "gali", "गली", "pothole", "potholes", "marammat", "maramat", "मरम्मत"
+      ]
+    },
+    {
+      "id": "Power / Electricity",
+      "label": "Power / Electricity",
+      "keywords": [
+        "bijli", "बिजली", "light", "lights", "vij", "वीज", "transformer", "ट्रांसफॉर्मर", "ट्रान्सफॉर्मर",
+        "voltage", "wire", "current", "कट", "cut", "power", "load shedding", "fuse", "bijli gol", "बिजली गोल", "line band"
+      ]
+    },
+    {
+      "id": "Sanitation & Waste",
+      "label": "Sanitation & Waste",
+      "keywords": [
+        "kachra", "कचरा", "gandagi", "गंदगी", "naali", "नाली", "drain", "drainage", "sewer",
+        "safai", "सफाई", "cleanliness", "swachh", "swachhta", "toilet", "shauchalay", "शौचालय", "badboo", "smell", "gutter", "गटर"
+      ]
+    },
+    {
+      "id": "Governance / Survey",
+      "label": "Governance / Survey",
+      "keywords": [
+        "yojana", "योजना", "ration card", "रेशन कार्ड", "राशन कार्ड", "form", "फॉर्म", "survey", "सर्वे",
+        "pension", "पेन्शन", "पेंशन", "sarpanch", "सरपंच", "patwari", "पटवारी", "lekhpal", "लेखपाल",
+        "officer", "bhrashtachar", "भ्रष्टाचार", "pradhan", "प्रधान", "kisan", "किसान", "token"
+      ]
+    },
+    {
+      "id": "Other",
+      "label": "Other",
+      "keywords": ["help", "madat", "मदत", "madad", "मदद", "urgent", "takrar", "तक्रार", "arji", "अर्ज"]
+    }
+  ]
+}
