@@ -63,28 +63,76 @@ export default function SingleAnalysis() {
 
   const { addRecord } = useRecords();
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!inputText.trim()) return;
     setIsAnalyzing(true);
     setIsSaved(false);
 
-    // Artificial 550ms delay to convey realistic processing & transition
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: inputText.trim() })
+      });
+      if (response.ok) {
+        const apiData = await response.json();
+        const localRes = classifyText(inputText);
+        setResult({
+          ...localRes,
+          backendData: apiData,
+          apiActive: true,
+          issueCategory: apiData.predicted_category || localRes.issueCategory,
+          region: apiData.predicted_region !== 'Uncertain' ? apiData.predicted_region : localRes.region,
+          status: apiData.routing_status === 'auto_routed' ? 'Verified / Routed' : 'Needs Review',
+          confidencePercent: apiData.confidence > 0 ? Math.round(apiData.confidence * 100) : localRes.confidencePercent,
+        });
+        setIsAnalyzing(false);
+        return;
+      }
+    } catch (e) {
+      console.warn('Backend API unavailable, using local client heuristics:', e);
+    }
+
     setTimeout(() => {
       const res = classifyText(inputText);
       setResult(res);
       setIsAnalyzing(false);
-    }, 550);
+    }, 400);
   };
 
   const handleSelectSample = (sampleText) => {
     setInputText(sampleText);
     setIsSaved(false);
     setIsAnalyzing(true);
-    setTimeout(() => {
-      const res = classifyText(sampleText);
-      setResult(res);
-      setIsAnalyzing(false);
-    }, 450);
+
+    fetch('http://127.0.0.1:8000/api/predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: sampleText })
+    })
+      .then(res => res.ok ? res.json() : null)
+      .then(apiData => {
+        const localRes = classifyText(sampleText);
+        if (apiData) {
+          setResult({
+            ...localRes,
+            backendData: apiData,
+            apiActive: true,
+            issueCategory: apiData.predicted_category || localRes.issueCategory,
+            region: apiData.predicted_region !== 'Uncertain' ? apiData.predicted_region : localRes.region,
+            status: apiData.routing_status === 'auto_routed' ? 'Verified / Routed' : 'Needs Review',
+            confidencePercent: apiData.confidence > 0 ? Math.round(apiData.confidence * 100) : localRes.confidencePercent,
+          });
+        } else {
+          setResult(localRes);
+        }
+      })
+      .catch(() => {
+        setResult(classifyText(sampleText));
+      })
+      .finally(() => {
+        setIsAnalyzing(false);
+      });
   };
 
   const handleClear = () => {
@@ -276,6 +324,22 @@ export default function SingleAnalysis() {
                   )}
                 </button>
               </div>
+
+              {/* FastAPI + Gemini Live Engine Verification Badge */}
+              {result.backendData && (
+                <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-teal-50/80 border border-teal-200/80 text-xs text-teal-900 shadow-2xs">
+                  <span className="flex items-center gap-2 font-medium">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span>Verified by FastAPI Backend (Gemini 3.8 Flash + scikit-learn)</span>
+                  </span>
+                  <span className="font-mono text-[11px] text-teal-800 bg-white/80 border border-teal-200 px-2 py-0.5 rounded-md font-semibold">
+                    Complaint #{result.backendData.complaint_id}
+                  </span>
+                </div>
+              )}
 
               {/* Original Text with Clue Highlighting */}
               <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
